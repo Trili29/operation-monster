@@ -1,0 +1,93 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#101813"><title>OPÉRATION M.O.N.S.T.E.R.</title><style>
+*{box-sizing:border-box}body{margin:0;background:#0a100e;color:#e3e9e4;font:16px/1.6 system-ui,sans-serif}main{max-width:560px;margin:auto;padding:20px 16px 40px}header{display:flex;justify-content:space-between;align-items:center;font:12px monospace;color:#93d9aa;letter-spacing:1px}h1{font-size:clamp(28px,8vw,42px);line-height:1.13;margin:14px 0;color:#a6f2b9}h2{font-size:25px;line-height:1.2;margin:8px 0 16px}p{margin:10px 0 18px}.panel{background:#121d17;border:1px solid #30463a;border-radius:16px;padding:20px;margin-top:18px}.small{font-size:12px;letter-spacing:1.5px;color:#a0b7a8;text-transform:uppercase}.muted{color:#a0b7a8;font-size:14px}.signal{color:#8ce5a4}.bar{height:6px;background:#29382f;border-radius:8px;overflow:hidden;margin:16px 0 8px}.bar i{display:block;height:100%;background:#90e6a8;transition:width .3s}button,input{font:inherit;border-radius:10px;min-height:48px;width:100%;padding:12px;border:1px solid #45614e}button{background:#a6f2b9;color:#102017;font-weight:750;cursor:pointer;margin-top:10px}button.secondary{background:transparent;color:#a6f2b9}input{background:#080f0b;color:white;font-size:17px;margin-top:12px}button:focus-visible,input:focus-visible{outline:3px solid #e8c66f;outline-offset:2px}.code{background:#080f0b;border:1px dashed #46634f;border-radius:10px;padding:16px;text-align:center;font: bold 22px/1.6 monospace;overflow-wrap:anywhere;color:#a6f2b9}.error{color:#ffb1a6}.hint{background:#293022;padding:12px;border-radius:8px;color:#f2dda0}.chat{padding:10px 12px;background:#23332a;border-radius:12px;margin:8px 0}.chat b{display:block;color:#9be9b0;font-size:12px}.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{padding:5px 9px;border:1px solid #385546;border-radius:8px;font:14px monospace}.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:240px;margin:12px auto}.pad button{margin:0;min-height:52px}.pad span{align-self:center;text-align:center}.gold{color:#f3d37e}.stamp{border:2px solid #c89465;color:#edb98b;display:inline-block;padding:4px 10px;transform:rotate(-4deg);font: bold 13px monospace;letter-spacing:2px}footer{margin-top:22px;text-align:center}.hidden{display:none}a{color:#a6f2b9}@media(prefers-reduced-motion:no-preference){.panel{animation:appear .24s ease-out}@keyframes appear{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:none}}}
+
+main{padding:20px 16px 40px;padding:calc(20px + env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+button{touch-action:manipulation}
+[hidden]{display:none}
+#root h1,#root h2{overflow-wrap:break-word}
+#hintText:not(.hidden){display:block}
+@media(max-width:360px){.panel{padding:14px}.code{padding:10px;font-size:18px}}
+</style></head><body><main><header><span>● MONSTER // OS 31.0</span><span id="clock">00:00</span></header><div id="root"><div class="panel"><span class="stamp">CONFIDENTIEL // FICTIF</span><h1>OPÉRATION<br>M.O.N.S.T.E.R.</h1><p class="small">Djibouti • Noël 2026 • Agent G-031</p><p>Un individu surnommé <b>Le Corbeau</b> a intercepté ton colis. Il menace de publier les archives nationales des potins.</p><p>Prépare ta Monster. Le commandement compte sur toi. Aucun footing ne sera exigé.</p><p id="loading">Si le terminal ne s’ouvre pas, ouvre la page du jeu directement dans Safari ou Chrome.</p></div></div><p id="saveStatus" class="muted" role="status" hidden>La sauvegarde est indisponible. Garde cet onglet ouvert pour poursuivre ta partie.</p><footer><div class="muted">Fiction de Noël • Démonstration V0.3 • Aucun lien avec un service officiel</div><button class="secondary" id="reset" type="button" hidden>Recommencer la démonstration</button></footer></main><script>
+const missions=[
+{tag:'Contrôle biométrique',title:'Un agent très spécial',intro:'Le Corbeau a falsifié ton dossier. Retrouve le mot qui correspond aux initiales des sept lignes du rapport.',body:'<div class="chat">Mauvaise volonté sportive constatée.<br>Objectif : atteindre le canapé.<br>Niveau de caféine réglementaire.<br>Spécialiste des potins.<br>Tacticien de la Faille.<br>Expert en manettes.<br>Ravitaillement prioritaire.</div>',answer:'MONSTER',hint:'Lis la première lettre de chaque ligne.',fragment:'G31X7',win:'Profil confirmé. Le test de Cooper est annulé par manque de volontaires.'},
+{tag:'Renseignement gaming',title:'La faille compromise',intro:'Une équipe de League of Legends a transmis son rapport. Identifie les trois éléments, puis saisis leurs initiales dans cet ordre.',body:'<div class="chat">1 — Champion aveugle, moine adepte des arts martiaux.<br>2 — Championne armée d’un arc de glace, originaire de Freljord.<br>3 — Petit yordle éclaireur qui pose des champignons.</div>',answer:'LAT',hint:'Lee Sin, puis Ashe, puis Teemo. Garde uniquement leurs initiales.',fragment:'7',win:'Connexion à la Faille rétablie. Aucun signalement pour feed intentionnel.'},
+{tag:'Laboratoire caféine',title:'Le protocole du Corbeau',intro:'Le Corbeau a avancé chaque lettre de trois positions dans l’alphabet. Recule de trois pour lire son instruction.',body:'<div class="code">RXYUH OH FRIIUH</div><p class="muted">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>',answer:'OUVRE LE COFFRE',hint:'R devient O, X devient U. Les espaces ne changent pas.',fragment:'P0T1N',win:'Caféine injectée virtuellement. Le laboratoire te remercie de ta contribution.'},
+{tag:'Contre-espionnage',title:'Le bureau des potins',intro:'Une seule personne a volé la dernière Monster. Exactement une des trois déclarations est vraie. Qui est le coupable ?',body:'<div class="chat"><b>AGENT ALPHA</b>Bravo a volé la Monster.</div><div class="chat"><b>AGENT BRAVO</b>Je ne l’ai pas volée.</div><div class="chat"><b>AGENT CHARLIE</b>Alpha ne l’a pas volée.</div><p class="muted">Les trois agents sont les seuls suspects. Un seul coupable.</p>',answer:'ALPHA',hint:'Les deux premières phrases se contredisent : une seule est vraie. La troisième doit donc être fausse.',fragment:'2',win:'Affaire classée. Le potin est désormais officiellement vérifié.'},
+{tag:'Console de secours',title:'Nintendo Access Protocol',intro:'Le terminal exige un itinéraire. Pars de la case S, sans diagonale, et applique les cinq déplacements indiqués. Saisis les lettres traversées, sans le S.',body:'<div class="code">S M Z<br>Q O N<br>Y E X</div><div class="code">→ ↓ → ↓ ←</div><div class="pad"><span></span><button type="button" aria-label="Haut" data-dir="↑">↑</button><span></span><button type="button" aria-label="Gauche" data-dir="←">←</button><span>●</span><button type="button" aria-label="Droite" data-dir="→">→</button><span></span><button type="button" aria-label="Bas" data-dir="↓">↓</button><span></span></div><div id="trail" class="muted" aria-live="polite">Trajet saisi : —</div><button class="secondary" id="clearTrail">Effacer le trajet</button>',answer:'MONXE',hint:'La première case visitée est M, puis O. Continue en suivant les flèches.',fragment:'N0EL6',win:'Manette synchronisée. Ton pouce a effectué son quota de sport annuel.'},
+{tag:'Décryptage final',title:'Le coffre numérique',intro:'Les trois fragments de cinq caractères sont dans ton inventaire. Les deux chiffres isolés sont des indices de contrôle. Le Corbeau a laissé cet ordre : Noël → agent → potins.',body:'<div class="code">[ NOËL ] - [ AGENT ] - [ POTINS ]</div><p class="muted">Saisis le code complet avec ou sans tirets.</p>',answer:'N0EL6-G31X7-P0T1N',hint:'N0EL6 est le fragment Nintendo, G31X7 celui de l’authentification, P0T1N celui du laboratoire.',win:'Le Corbeau a perdu. Le colis numérique est libéré.'}
+];
+
+const root = document.getElementById('root');
+const clock = document.getElementById('clock');
+const reset = document.getElementById('reset');
+const saveStatus = document.getElementById('saveStatus');
+const storageKey = 'operation-monster-v03';
+const initialState = () => ({stage: -1, errors: 0, hints: 0, start: 0, end: 0});
+const count = n => Number.isSafeInteger(n) && n >= 0 ? n : 0;
+const timestamp = n => n <= Date.now() ? count(n) : 0;
+
+function restore() {
+  try {
+    const raw = window.localStorage.getItem(storageKey) ?? window.localStorage.getItem('monster-v02');
+    if (!raw) return initialState();
+    let saved;
+    try {
+      saved = JSON.parse(raw);
+    } catch {
+      return initialState();
+    }
+    if (!saved || !Number.isInteger(saved.stage) || saved.stage < -1 || saved.stage > missions.length) {
+      return initialState();
+    }
+    const start = saved.stage < 0 ? 0 : timestamp(saved.start) || Date.now();
+    const end = saved.stage === missions.length ? Math.max(start, timestamp(saved.end) || Date.now()) : 0;
+    return {stage: saved.stage, errors: count(saved.errors), hints: count(saved.hints), start, end};
+  } catch {
+    saveStatus.hidden = false;
+    return initialState();
+  }
+}
+
+let s = restore();
+const norm = value => value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z0-9]/g, '');
+
+function save() {
+  try {
+    window.localStorage.setItem(storageKey, JSON.stringify(s));
+    saveStatus.hidden = true;
+  } catch {
+    saveStatus.hidden = false;
+  }
+}
+
+function elapsed() {
+  const total = s.start ? Math.max(0, Math.floor(((s.end || Date.now()) - s.start) / 1000)) : 0;
+  return String(Math.floor(total / 60)).padStart(2, '0') + ':' + String(total % 60).padStart(2, '0');
+}
+
+function showFromTop() {
+  window.scrollTo(0, 0);
+  const heading = root.querySelector('h1, h2');
+  if (heading) {
+    heading.tabIndex = -1;
+    heading.focus();
+  }
+}
+
+function refreshControls() {
+  reset.hidden = s.stage < 0;
+  clock.textContent = elapsed();
+}
+
+setInterval(() => { clock.textContent = elapsed(); }, 1000);
+function render(){refreshControls();if(s.stage===-1){root.innerHTML=`<div class="panel"><span class="stamp">CONFIDENTIEL // FICTIF</span><h1>OPÉRATION<br>M.O.N.S.T.E.R.</h1><p class="small">Djibouti • Noël 2026 • Agent G-031</p><p>Un individu surnommé <b>Le Corbeau</b> a intercepté ton colis. Il menace de publier les archives nationales des potins.</p><p>Prépare ta Monster. Le commandement compte sur toi. Aucun footing ne sera exigé.</p><form id="form"><label for="answer">Clé d’accès de la lettre</label><input id="answer" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="60" autocapitalize="characters" required placeholder="Saisir la clé"><button>Ouvrir le terminal</button></form><p id="feedback" role="status"></p><button class="secondary" id="hint" aria-controls="hintText" aria-expanded="false">Indice de démonstration</button><p id="hintText" class="hint hidden">16 – 15 – 20 – 9 – 14 – 19. A = 1, B = 2…</p></div>`;wire('POTINS');return}if(s.stage===6){root.innerHTML=`<div class="panel"><p class="small gold">Opération terminée</p><h1 class="gold">MISSION ACCOMPLIE</h1><p>Le Corbeau était en réalité le commandement. Oui, tout ça pour un cadeau.</p><p class="small">Récompense Steam • Code fictif de démonstration</p><div class="code">DEMO-MONSTER-NOEL</div><p class="muted">Ce code n’est pas utilisable sur Steam.</p><button id="copy">Copier le code de test</button><p id="feedback" role="status"></p><hr><h2>Joyeux Noël, agent G-031 !</h2><p>Même à plusieurs milliers de kilomètres, on pense à toi. Profite de ton cadeau, prends soin de toi et garde-nous quelques potins pour ton retour.</p><p>— Toute l’équipe</p><div class="chat">Décoration décernée : Grand maître international des potins et héros du canapé.</div><p class="muted">Durée : ${elapsed()} • Erreurs : ${s.errors} • Indices : ${s.hints}</p></div>`;document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText('DEMO-MONSTER-NOEL');document.getElementById('feedback').textContent='Code de test copié.'}catch(e){document.getElementById('feedback').textContent='Sélectionne le code pour le copier manuellement.'}};return}const m=missions[s.stage];root.innerHTML=`<div class="bar"><i style="width:${s.stage/6*100}%"></i></div><div class="small">Mission ${s.stage+1}/6 • ${s.errors} erreur(s)</div><div class="panel"><p class="small signal">${m.tag}</p><h2>${m.title}</h2><p>${m.intro}</p>${m.body}<form id="form"><label for="answer">Ta réponse</label><input id="answer" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="60" autocapitalize="characters" required><button>Valider la transmission</button></form><p id="feedback" role="status"></p><button class="secondary" id="hint" aria-controls="hintText" aria-expanded="false">Demander un indice</button><p id="hintText" class="hint hidden">${m.hint}</p></div><div class="panel"><div class="small">Inventaire</div><div class="chips">${missions.slice(0,s.stage).map(x=>`<span class="chip">${x.fragment}</span>`).join('')||'<span class="muted">Aucun fragment</span>'}</div></div>`;wire(m.answer);if(s.stage===4){let row=0,col=0,grid=['SMZ','QON','YEX'],path='';document.querySelectorAll('[data-dir]').forEach(b=>b.onclick=()=>{let d=b.dataset.dir,r=row+(d==='↓'?1:d==='↑'?-1:0),c=col+(d==='→'?1:d==='←'?-1:0);if(r<0||r>2||c<0||c>2)return;row=r;col=c;path+=grid[row][col];document.getElementById('trail').textContent='Trajet saisi : '+path;document.getElementById('answer').value=path});document.getElementById('clearTrail').onclick=()=>{row=0;col=0;path='';document.getElementById('trail').textContent='Trajet saisi : —';document.getElementById('answer').value=''}}}
+function wire(answer){document.getElementById('hint').onclick=()=>{let h=document.getElementById('hintText');if(h.classList.contains('hidden')){s.hints++;save()}const hidden = h.classList.toggle('hidden');document.getElementById('hint').setAttribute('aria-expanded',String(!hidden))};document.getElementById('form').onsubmit=e=>{e.preventDefault();let f=document.getElementById('feedback');if(norm(document.getElementById('answer').value)!==norm(answer)){s.errors++;save();f.className='error';f.textContent=['Transmission refusée. Le Corbeau rigole.','Erreur. Recharge mentale conseillée.','Même le canapé aurait trouvé. Réessaie !'][s.errors%3];return}let m=missions[s.stage];if(!s.start)s.start=Date.now();s.stage++;if(s.stage===missions.length)s.end=Date.now();save();refreshControls();root.innerHTML=`<div class="panel"><p class="small signal">✓ Transmission authentifiée</p><h2>${m?'Épreuve réussie':'Bienvenue, agent G-031'}</h2><p>${m?m.win:'Connexion établie. Le commandement a six missions pour toi.'}</p>${m&&m.fragment?`<div class="code">${m.fragment}</div>`:''}<button id="next">Continuer</button></div>`;showFromTop();document.getElementById('next').onclick=()=>{render();showFromTop()}}}
+reset.onclick = () => {
+  if (!window.confirm('Effacer la progression de démonstration ?')) return;
+  s = initialState();
+  save();
+  render();
+  showFromTop();
+};
+render();
+</script></body></html>
