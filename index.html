@@ -151,6 +151,23 @@ input::placeholder { color: #a5b6c2 }
 .final h2 { color: var(--gold) }
 .final hr { margin: 19px 0; border: 0; border-top: 1px solid var(--line) }
 .postcard { display: block; margin-top: 16px; width: 100%; aspect-ratio: 2.6; object-fit: cover; object-position: center 51%; border: 1px solid var(--line); border-radius: 8px }
+.archive h3 { margin: 16px 0 8px }
+.archive .action { text-align: center }
+.archivePick { display: block; text-align: left !important; margin-top: 10px }
+.archivePick span { display: block; font: 12px var(--mono); color: var(--muted); margin-top: 4px }
+.extract { border-left: 2px solid var(--cyan); padding: 8px 12px; margin: 8px 0; background: #0a1622; border-radius: 0 7px 7px 0 }
+.extract p { margin: 4px 0 }
+.registry { width: 100%; border-collapse: collapse; background: #0a1622; margin: 8px 0 }
+.registry th, .registry td { border-bottom: 1px solid var(--line); text-align: left; padding: 7px 10px; font: 13px var(--mono) }
+.registry th { font-weight: 700; color: var(--cyan) }
+.fallback { margin: 12px 0 }
+.fallback summary { cursor: pointer; padding: 10px; min-height: 44px; color: var(--cyan); border: 1px solid var(--line); border-radius: 8px }
+.fallback dd { margin: 2px 0 10px }
+.fallback dt { font-weight: 700 }
+.further { display: block; margin-top: 10px }
+.moreHint { margin-top: 8px }
+.archiveHints { padding-left: 22px; margin: 8px 0 0 }
+.archiveHints li { margin: 6px 0 }
 footer {
   margin-top: 20px; padding: 13px 0; border-top: 1px solid var(--line);
   display: flex; justify-content: space-between; align-items: center; gap: 11px; flex-wrap: wrap;
@@ -193,7 +210,7 @@ footer p { margin: 0 }
   <div class="card"><p id="loading">Pour ouvrir le terminal, utilise le lien du QR dans Safari ou Chrome.</p></div>
 </main>
 <p id="saveStatus" class="hint" role="status" hidden>La sauvegarde est indisponible. Garde cet onglet ouvert pour poursuivre la mission.</p>
-<footer><p class="muted">Jeu de Noël fictif · Démonstration V0.5</p><button id="reset" type="button" hidden>Recommencer la démonstration</button></footer>
+<footer><p class="muted">La relève de Noël · Jeu fictif · V0.6</p><button id="reset" type="button" hidden>Recommencer la démonstration</button></footer>
 </div>
 <script>
 'use strict';
@@ -203,8 +220,141 @@ const missions=[
 {tag:'Laboratoire caféine',title:'Le protocole du Corbeau',intro:'Déchiffre le message ci-dessous : pour chaque lettre, recule de trois places dans l’alphabet. Saisis la phrase complète que tu obtiens.',body:'<div class="code">RXYUH OH FRIIUH</div><p class="muted">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>',answer:'OUVRE LE COFFRE',hint:'R devient O, X devient U. Les espaces ne changent pas.',fragment:'P0T1N'},
 {tag:'Contre-espionnage',title:'Le bureau des potins',intro:'Alpha, Bravo et Charlie te donnent chacun leur version. Un seul a volé la dernière Monster, et une seule des trois déclarations est vraie. Saisis le nom du coupable.',body:'<div class="chat"><b>AGENT ALPHA</b>Bravo a volé la Monster.</div><div class="chat"><b>AGENT BRAVO</b>Je ne l’ai pas volée.</div><div class="chat"><b>AGENT CHARLIE</b>Alpha ne l’a pas volée.</div><p class="muted">Les trois agents sont les seuls suspects. Un seul coupable.</p>',answer:'ALPHA',hint:'Les deux premières phrases se contredisent : une seule est vraie. La troisième doit donc être fausse.',fragment:'2'},
 {tag:'Console de secours',title:'Nintendo Access Protocol',intro:'Tu pars de la case S. Appuie sur les boutons de la manette dans l’ordre indiqué au-dessus de la grille. Chaque déplacement ajoute automatiquement une lettre à ta réponse. Au bout des cinq déplacements, appuie sur « Valider la transmission ». Tu peux aussi saisir les cinq lettres à la main, sans compter la case S.',body:'<div class="code">S M Z<br>Q O N<br>Y E X</div><div class="code">→ ↓ → ↓ ←</div><div class="pad"><span></span><button type="button" aria-label="Haut" data-dir="↑">↑</button><span></span><button type="button" aria-label="Gauche" data-dir="←">←</button><span>●</span><button type="button" aria-label="Droite" data-dir="→">→</button><span></span><button type="button" aria-label="Bas" data-dir="↓">↓</button><span></span></div><div id="trail" class="muted" aria-live="polite">Trajet saisi : —</div><button class="secondary" id="clearTrail">Effacer le trajet</button>',answer:'MONXE',hint:'La première case visitée est M, puis O. Continue en suivant les flèches.',fragment:'N0EL6'},
-{tag:'Décryptage final',title:'Le coffre numérique',intro:'Dans l’inventaire juste avant le champ de réponse, repère les trois fragments de cinq caractères. Ignore les deux chiffres isolés. Assemble les fragments qui correspondent à Noël, à l’agent et aux potins, dans cet ordre.',body:'<div class="code">[ NOËL ] - [ AGENT ] - [ POTINS ]</div><p class="muted">Saisis les quinze caractères à la suite, avec ou sans tirets.</p>',answer:'N0EL6-G31X7-P0T1N',hint:'N0EL6 est le fragment Nintendo, G31X7 celui de l’authentification, P0T1N celui du laboratoire.'}
+{tag:'Décryptage final',title:'Le coffre numérique',intro:'Repère dans ton inventaire les trois fragments de cinq caractères. Laisse de côté les deux chiffres isolés. Utilise les deux transmissions des archives pour retrouver l’ordre dans lequel assembler les fragments.',body:'<div class="code">[ 1 ] - [ 2 ] - [ 3 ]</div><p class="muted">Saisis les quinze caractères à la suite, avec ou sans tirets.</p>',answer:'G31X7-P0T1N-N0EL6',hint:'N0EL6 est le fragment Nintendo, G31X7 celui de l’authentification, P0T1N celui du laboratoire.'}
 ];
+const dossiers = {
+  "A": {
+    "id": "A",
+    "title": "Le feu de l’abbaye",
+    "label": "Transmission des archives",
+    "intro": "Le Corbeau a effacé le nom d’un phare, mais il a laissé son année de mise en service dans un registre. Retrouve le phare actuel, puis relève le mot associé à la bonne année.",
+    "sections": [
+      {
+        "title": "01 / Transmission interceptée",
+        "lines": [
+          "Impossible de confondre ce feu avec celui d’un navire.",
+          "Rien ne subsiste du toit de l’ancienne abbaye à ses pieds.",
+          "On aperçoit les îles au large, à l’ouest du Finistère.",
+          "Il a remplacé un feu beaucoup plus ancien.",
+          "Sur la pointe, son voisin est un sémaphore.",
+          "Entre ces lignes se cache un nom de mer."
+        ]
+      },
+      {
+        "title": "02 / Registre des archives",
+        "rows": [
+          [
+            "1692",
+            "AMARRE"
+          ],
+          [
+            "1796",
+            "VARECH"
+          ],
+          [
+            "1835",
+            "SILLAGE"
+          ],
+          [
+            "2005",
+            "ÉCUME"
+          ]
+        ]
+      }
+    ],
+    "web": {
+      "label": "Ouvrir la base française du patrimoine",
+      "url": "https://pop.culture.gouv.fr/"
+    },
+    "fallback": [
+      [
+        "Pointe du Raz",
+        "Le phare de la Vieille se trouve sur un rocher en mer, au large de la pointe. Il ne se dresse pas près d’une abbaye."
+      ],
+      [
+        "Pointe Saint-Mathieu",
+        "À Plougonvelin, l’abbaye en ruine, le phare et le sémaphore se partagent la pointe. Le feu moderne est allumé en juin 1835. Une installation plus ancienne remonte à 1692 et le phare est inscrit au titre des monuments historiques en 2005."
+      ],
+      [
+        "Île d’Ouessant",
+        "Le Créac’h est un phare insulaire. Son feu s’allume pour la première fois en 1863."
+      ]
+    ],
+    "prompt": "Saisis le mot en capitales associé à l’année dans le registre.",
+    "hints": [
+      "Lis les premières lettres des six lignes de la transmission. Le nom de cette mer t’aide à orienter la recherche.",
+      "Dans la recherche, combine « abbaye en ruine », « phare » et le nom de la mer. Si tu es hors ligne, compare les trois fiches de secours.",
+      "Cherche la première mise en service du phare actuel, puis lis la ligne de cette année dans le registre."
+    ],
+    "answer": "SILLAGE",
+    "result": "Le fragment AGENT ouvre la séquence."
+  },
+  "B": {
+    "id": "B",
+    "title": "Le colis fantôme",
+    "label": "Feuillet de la relève",
+    "intro": "Quatre événements se sont produits, chacun à une heure différente. Une fausse transmission s’est glissée dans le dossier. Reconstitue la permanence à l’aide des messages dont l’indicatif figure au registre des visas.",
+    "sections": [
+      {
+        "title": "01 / Événements et registre des visas",
+        "lines": [
+          "Événements : test radio, passage du colis, pause café et appel de Bretagne.",
+          "Visas de la relève : VIGIE (Marine), SABLE (Terre), ALIZÉ (Air et Espace)."
+        ]
+      },
+      {
+        "title": "02 / Messages reçus",
+        "messages": [
+          [
+            "ALIZÉ",
+            "L’appel de Bretagne a été le dernier événement de cette permanence."
+          ],
+          [
+            "SABLE",
+            "Le café a été servi au créneau juste après le passage du colis."
+          ],
+          [
+            "VIGIE",
+            "Le test radio a eu lieu exactement dix minutes avant le passage du colis."
+          ],
+          [
+            "BRUME",
+            "Le colis est passé après le café et avant l’appel."
+          ]
+        ]
+      },
+      {
+        "title": "03 / Registre des créneaux",
+        "rows": [
+          [
+            "21 h 05",
+            "RÉCIF"
+          ],
+          [
+            "21 h 15",
+            "GRANIT"
+          ],
+          [
+            "21 h 25",
+            "BALISE"
+          ],
+          [
+            "21 h 35",
+            "JETÉE"
+          ]
+        ]
+      }
+    ],
+    "prompt": "À quelle heure le colis est-il passé ? Saisis le mot en capitales qui correspond à ce créneau.",
+    "hints": [
+      "Compare les indicatifs des quatre messages au registre des visas. Un message doit être écarté.",
+      "Place d’abord l’appel de Bretagne. Puis forme le bloc de trois créneaux consécutifs : test radio, colis, café.",
+      "Le colis occupe le deuxième créneau de la permanence. Cherche le mot qui accompagne cette heure."
+    ],
+    "answer": "GRANIT",
+    "result": "Le fragment POTINS se place juste avant NOËL."
+  }
+};
 
 const radio = [
   ['Marine nationale · Poste de permanence', 'Treillis de rigueur ce soir. Café chaud pour toute la relève.'],
@@ -227,7 +377,7 @@ const audioButton = document.getElementById('audio');
 const saveStatus = document.getElementById('saveStatus');
 const storageKey = 'operation-monster-v03';
 const reward = 'DEMO-MONSTER-NOEL';
-const initialState = () => ({stage: -1, errors: 0, hints: 0, start: 0, end: 0});
+const initialState = () => ({stage: -1, errors: 0, hints: 0, start: 0, end: 0, archives: []});
 const nonnegative = n => Number.isSafeInteger(n) && n >= 0 ? n : 0;
 const timestamp = n => n <= Date.now() ? nonnegative(n) : 0;
 const normalize = value => value.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z0-9]/g, '');
@@ -241,7 +391,9 @@ function restore() {
     if (!saved || !Number.isInteger(saved.stage) || saved.stage < -1 || saved.stage > missions.length) return initialState();
     const start = saved.stage < 0 ? 0 : timestamp(saved.start) || Date.now();
     const end = saved.stage === missions.length ? Math.max(start, timestamp(saved.end) || Date.now()) : 0;
-    return {stage: saved.stage, errors: nonnegative(saved.errors), hints: nonnegative(saved.hints), start, end};
+    const archives = saved.stage >= 5 && Array.isArray(saved.archives)
+      ? Object.keys(dossiers).filter(id => saved.archives.includes(id)) : [];
+    return {stage: saved.stage, errors: nonnegative(saved.errors), hints: nonnegative(saved.hints), start, end, archives};
   } catch {
     saveStatus.hidden = false;
     return initialState();
@@ -343,7 +495,9 @@ function journal(includeInventory = true) {
     return '<li' + (current ? ' aria-current="step"' : done ? ' data-done' : '') + '><small>0' + (index + 1) +
       '</small><span>' + (done || current ? mission.title : 'Transmission en attente') + '</span><small>' + status + '</small></li>';
   }).join('');
-  return '<aside class="card journal"><h3>Carnet de mission</h3><ol>' + steps + '</ol>' + (includeInventory ? inventory() : '') +
+  const archiveProgress = state.stage >= 5 && (state.stage < missions.length || state.archives.length)
+    ? '<p class="muted">Archives du Corbeau : ' + state.archives.length + ' / 2 dossiers résolus</p>' : '';
+  return '<aside class="card journal"><h3>Carnet de mission</h3><ol>' + steps + '</ol>' + archiveProgress + (includeInventory ? inventory() : '') +
     '<p class="muted stats">' + journalStats() + '</p></aside>';
 }
 
@@ -419,8 +573,72 @@ function missionView(mission, index) {
   const clue = index === 4 ? routeConsole() : mission.body;
   return hero(true) + progress() + '<div class="layout"><section class="card"><p class="kicker">' + mission.tag + '</p><h2>' + mission.title +
     '</h2><p class="intro">' + mission.intro + '</p><div class="evidence">' + clue + '</div>' +
-    (index === 5 ? '<div class="inline-inventory">' + inventory() + '</div>' : '') +
-    answerForm('Ta réponse', 'Valider la transmission', 'Demander un indice', mission.hint) + '</section>' + journal(index !== 5) + '</div>';
+    (index === 5 ? '<div class="extract"><b>Transmissions des archives</b>' + archiveResults() + '</div><div class="inline-inventory">' + inventory() + '</div>' : '') +
+    answerForm('Ta réponse', 'Valider la transmission', 'Demander un indice', mission.hint) +
+    (index === 5 ? '<button type="button" class="action disclosure" id="backArchives">Retour aux archives</button>' : '') +
+    '</section>' + journal(index !== 5) + '</div>';
+}
+
+function archiveResults() {
+  return Object.values(dossiers).filter(dossier => state.archives.includes(dossier.id))
+    .map(dossier => '<p><strong>' + dossier.id + '</strong> · ' + dossier.result + '</p>').join('');
+}
+
+function archiveScreen(title, line, content, focus) {
+  changeScreen(hero(true) + progress() + '<div class="layout"><section class="card archive"><p class="kicker">' +
+    line + '</p><h2>' + title + '</h2>' + content + '</section>' + journal() + '</div>', focus);
+}
+
+function showArchives(focus) {
+  const picks = Object.values(dossiers).map(dossier => {
+    const status = state.archives.includes(dossier.id) ? 'Résolu · Relire le dossier' : 'À examiner';
+    return '<button class="action archivePick" type="button" data-dossier="' + dossier.id +
+      '">' + dossier.id + ' · ' + dossier.title + '<span>' + status + '</span></button>';
+  }).join('');
+  const openSafe = state.archives.length === Object.keys(dossiers).length;
+  const confirmed = archiveResults();
+  archiveScreen('Archives du Corbeau', 'Chapitre final · La relève de Noël',
+    '<p>Deux dossiers indiquent comment assembler les fragments du coffre. Ouvre-les dans l’ordre que tu veux. Si tu as reçu les annexes papier, tu peux les ouvrir maintenant.</p>' +
+    picks + (confirmed ? '<div class="extract">' + confirmed + '</div>' : '') +
+    (openSafe ? '<button class="action primary disclosure" type="button" id="openSafe">Ouvrir le dossier du coffre</button>' : ''), focus);
+  root.querySelectorAll('[data-dossier]').forEach(button => {
+    button.onclick = () => showDossier(dossiers[button.dataset.dossier]);
+  });
+  if (openSafe) document.getElementById('openSafe').onclick = () => showMission(true);
+}
+
+function dossierSection(dossier, section) {
+  const heading = '<h3>' + section.title + '</h3>';
+  if (section.lines) return heading + '<div class="extract">' + section.lines.map(line => '<p>' + line + '</p>').join('') + '</div>';
+  if (section.messages) return heading + section.messages.map(([from, message]) => '<div class="chat"><b>' + from + '</b>' + message + '</div>').join('');
+  const rows = section.rows.map(([key, word]) => '<tr><th scope="row">' + key + '</th><td>' + word + '</td></tr>').join('');
+  return heading + '<table class="registry"><thead><tr><th scope="col">' + (dossier.id === 'A' ? 'Année' : 'Heure') +
+    '</th><th scope="col">Mot du registre</th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+function researchMaterials(dossier) {
+  if (!dossier.web) return '';
+  const entries = dossier.fallback.map(([place, note]) => '<dt>' + place + '</dt><dd>' + note + '</dd>').join('');
+  return '<a class="further" href="' + dossier.web.url + '" target="_blank" rel="noopener noreferrer">' +
+    dossier.web.label + ' (nouvel onglet)</a><details class="fallback"><summary>Archives de secours · Hors ligne</summary><dl>' + entries + '</dl></details>';
+}
+
+function showDossier(dossier) {
+  const solved = state.archives.includes(dossier.id);
+  const solvedOrForm = solved ? '<div class="extract"><b>Dossier résolu</b><p>' + dossier.result + '</p></div>' :
+    '<p><strong>' + dossier.prompt + '</strong></p>' +
+    answerForm('Mot du registre', 'Valider le mot', 'Demander un indice', dossier.hints[0]) +
+    '<button class="action moreHint" type="button" id="moreHint" hidden>Indice suivant</button>';
+  archiveScreen(dossier.title, 'Annexe ' + dossier.id + ' · ' + dossier.label,
+    '<p class="intro">' + dossier.intro + '</p>' + dossier.sections.map(section => dossierSection(dossier, section)).join('') +
+    researchMaterials(dossier) + solvedOrForm + '<button class="action disclosure" type="button" id="backArchives">Retour aux archives</button>', true);
+  document.getElementById('backArchives').onclick = () => showArchives(true);
+  if (solved) return;
+  wireAnswer(dossier.answer, () => {
+    state.archives.push(dossier.id);
+    save();
+    showDossier(dossier);
+  }, dossier.hints);
 }
 
 function transmission(from, message, heading, fragment) {
@@ -452,13 +670,23 @@ function finish(focus) {
   };
 }
 
-function wireAnswer(answer) {
+function wireAnswer(answer, onSuccess = advance, hints = []) {
   const hint = document.getElementById('hint');
   const hintText = document.getElementById('hintText');
+  const more = document.getElementById('moreHint');
+  let revealed = 0;
   hint.onclick = () => {
     const hidden = hintText.classList.toggle('hidden');
     hint.setAttribute('aria-expanded', String(!hidden));
-    if (!hidden) { state.hints++; save(); }
+    if (!hidden && revealed === 0) { revealed++; state.hints++; save(); }
+    if (more) more.hidden = hidden || revealed >= hints.length;
+  };
+  if (more) more.onclick = () => {
+    hintText.append(document.createElement('br'), document.createTextNode(hints[revealed]));
+    revealed++;
+    state.hints++;
+    save();
+    more.hidden = revealed >= hints.length;
   };
   document.getElementById('form').onsubmit = event => {
     event.preventDefault();
@@ -471,16 +699,28 @@ function wireAnswer(answer) {
       feedback.classList.add('error');
       return;
     }
-    const mission = missions[state.stage];
-    const reply = replies[state.stage];
-    if (!state.start) state.start = Date.now();
-    state.stage++;
-    if (state.stage === missions.length) state.end = Date.now();
-    save();
     playSignal();
-    if (mission) transmission(reply[0], reply[1], 'Épreuve réussie', mission.fragment);
-    else transmission('Marine · Poste de permanence', 'Bienvenue à la permanence. Six transmissions t’attendent dans le carnet.', 'Accès confirmé');
+    onSuccess();
   };
+}
+
+function advance() {
+  const mission = missions[state.stage];
+  const reply = replies[state.stage];
+  if (!state.start) state.start = Date.now();
+  state.stage++;
+  if (state.stage === missions.length) state.end = Date.now();
+  save();
+  if (mission) transmission(reply[0], reply[1], 'Épreuve réussie', mission.fragment);
+  else transmission('Marine · Poste de permanence', 'Bienvenue à la permanence. Six missions t’attendent dans le carnet.', 'Accès confirmé');
+}
+
+function showMission(focus) {
+  const mission = missions[state.stage];
+  changeScreen(missionView(mission, state.stage), focus);
+  wireAnswer(mission.answer);
+  if (state.stage === 4) wireConsole();
+  if (state.stage === 5) document.getElementById('backArchives').onclick = () => showArchives(true);
 }
 
 function render(focus = false) {
@@ -490,10 +730,8 @@ function render(focus = false) {
     return;
   }
   if (state.stage === missions.length) { finish(focus); return; }
-  const mission = missions[state.stage];
-  changeScreen(missionView(mission, state.stage), focus);
-  wireAnswer(mission.answer);
-  if (state.stage === 4) wireConsole();
+  if (state.stage === 5) { showArchives(focus); return; }
+  showMission(focus);
 }
 
 reset.onclick = () => {
